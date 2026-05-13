@@ -1,0 +1,56 @@
+found vocab_size = 65 (inside data\shakespeare_char\meta.pkl)
+Initializing a new model from scratch
+number of parameters: 10.65M
+num decayed parameter tensors: 26, with 10,740,096 parameters
+num non-decayed parameter tensors: 13, with 4,992 parameters
+using fused AdamW: True
+step 0: train loss 4.2843, val loss 4.2836
+iter 0: loss 4.2676, time 870.16ms, mfu -100.00%
+step 5: train loss 3.2760, val loss 3.3007
+saving checkpoint to out-shakespeare-char-100
+step 10: train loss 2.9663, val loss 3.0246
+saving checkpoint to out-shakespeare-char-100
+iter 10: loss 2.9779, time 714.00ms, mfu 0.52%
+step 15: train loss 2.7889, val loss 2.8009
+saving checkpoint to out-shakespeare-char-100
+step 20: train loss 2.6610, val loss 2.6667
+saving checkpoint to out-shakespeare-char-100
+iter 20: loss 2.6643, time 737.84ms, mfu 0.52%
+step 25: train loss 2.5979, val loss 2.6066
+saving checkpoint to out-shakespeare-char-100
+step 30: train loss 2.5633, val loss 2.5680
+saving checkpoint to out-shakespeare-char-100
+iter 30: loss 2.6011, time 729.22ms, mfu 0.52%
+step 35: train loss 2.5576, val loss 2.5522
+saving checkpoint to out-shakespeare-char-100
+step 40: train loss 2.5298, val loss 2.5278
+saving checkpoint to out-shakespeare-char-100
+iter 40: loss 2.5525, time 718.46ms, mfu 0.52%
+step 45: train loss 2.5136, val loss 2.5197
+saving checkpoint to out-shakespeare-char-100
+step 50: train loss 2.5018, val loss 2.4941
+saving checkpoint to out-shakespeare-char-100
+iter 50: loss 2.5087, time 716.44ms, mfu 0.52%
+step 55: train loss 2.5042, val loss 2.4928
+saving checkpoint to out-shakespeare-char-100
+step 60: train loss 2.4896, val loss 2.4903
+saving checkpoint to out-shakespeare-char-100
+iter 60: loss 2.5085, time 701.27ms, mfu 0.52%
+step 65: train loss 2.4856, val loss 2.4883
+saving checkpoint to out-shakespeare-char-100
+step 70: train loss 2.4723, val loss 2.4859
+saving checkpoint to out-shakespeare-char-100
+iter 70: loss 2.5205, time 719.15ms, mfu 0.52%
+step 75: train loss 2.4599, val loss 2.4849
+saving checkpoint to out-shakespeare-char-100
+step 80: train loss 2.4688, val loss 2.4773
+saving checkpoint to out-shakespeare-char-100
+iter 80: loss 2.4984, time 725.13ms, mfu 0.52%
+step 85: train loss 2.4593, val loss 2.4801
+step 90: train loss 2.4600, val loss 2.4677
+saving checkpoint to out-shakespeare-char-100
+iter 90: loss 2.4898, time 763.96ms, mfu 0.52%
+step 95: train loss 2.4619, val loss 2.4822
+step 100: train loss 2.4621, val loss 2.4734
+iter 100: loss 2.4888, time 516.58ms, mfu 0.54%
+loss history saved to out-shakespeare-char-100\loss.json
