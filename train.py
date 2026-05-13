@@ -17,9 +17,11 @@ $ torchrun --nproc_per_node=8 --nnodes=2 --node_rank=1 --master_addr=123.456.123
 """
 
 import os
+import sys
 import time
 import math
 import pickle
+import json
 from contextlib import nullcontext
 
 import numpy as np
@@ -103,6 +105,19 @@ print(f"tokens per iteration will be: {tokens_per_iter:,}")
 
 if master_process:
     os.makedirs(out_dir, exist_ok=True)
+    # tee stdout to log file
+    class Tee:
+        def __init__(self, stream, path):
+            self.stream = stream
+            self.file = open(path, 'w', encoding='utf-8')
+        def write(self, data):
+            self.stream.write(data)
+            self.file.write(data)
+            self.file.flush()
+        def flush(self):
+            self.stream.flush()
+            self.file.flush()
+    sys.stdout = Tee(sys.stdout, os.path.join(out_dir, 'train.log'))
 torch.manual_seed(1337 + seed_offset)
 torch.backends.cuda.matmul.allow_tf32 = True # allow tf32 on matmul
 torch.backends.cudnn.allow_tf32 = True # allow tf32 on cudnn
@@ -252,6 +267,9 @@ t0 = time.time()
 local_iter_num = 0 # number of iterations in the lifetime of this process
 raw_model = model.module if ddp else model # unwrap DDP container if needed
 running_mfu = -1.0
+# loss history for plotting
+train_loss_history = []  # list of (iter_num, loss)
+val_loss_history = []    # list of (iter_num, loss)
 while True:
 
     # determine and set the learning rate for this iteration
@@ -263,6 +281,8 @@ while True:
     if iter_num % eval_interval == 0 and master_process:
         losses = estimate_loss()
         print(f"step {iter_num}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+        train_loss_history.append((iter_num, losses['train'].item()))
+        val_loss_history.append((iter_num, losses['val'].item()))
         if wandb_log:
             wandb.log({
                 "iter": iter_num,
@@ -325,6 +345,7 @@ while True:
             mfu = raw_model.estimate_mfu(batch_size * gradient_accumulation_steps, dt)
             running_mfu = mfu if running_mfu == -1.0 else 0.9*running_mfu + 0.1*mfu
         print(f"iter {iter_num}: loss {lossf:.4f}, time {dt*1000:.2f}ms, mfu {running_mfu*100:.2f}%")
+        train_loss_history.append((iter_num, lossf))
     iter_num += 1
     local_iter_num += 1
 
@@ -332,5 +353,23 @@ while True:
     if iter_num > max_iters:
         break
 
+# save loss history
+if master_process and (train_loss_history or val_loss_history):
+    loss_data = {
+        'train': [{'iter': it, 'loss': ls} for it, ls in train_loss_history],
+        'val': [{'iter': it, 'loss': ls} for it, ls in val_loss_history],
+    }
+    loss_path = os.path.join(out_dir, 'loss.json')
+    with open(loss_path, 'w') as f:
+        json.dump(loss_data, f, indent=2)
+    print(f"loss history saved to {loss_path}")
+
 if ddp:
     destroy_process_group()
+
+# restore stdout and close log file
+if master_process and isinstance(sys.stdout, Tee):
+    log_path = sys.stdout.file.name
+    sys.stdout.file.close()
+    sys.stdout = sys.stdout.stream
+    print(f"training log saved to {log_path}")
