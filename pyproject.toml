@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nanogpt"
+version = "0.1.0"
+description = "The simplest, fastest repository for training/finetuning medium-sized GPTs"
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "Andrej Karpathy"}
+]
+requires-python = ">=3.10"
+
+dependencies = [
+    "torch>=2.0.0",
+    "numpy>=1.24",
+    "transformers>=4.30.0",
+    "datasets>=2.0.0",
+    "tiktoken>=0.5.0",
+    "wandb>=0.13.0",
+    "tqdm>=4.65.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/karpathy/nanoGPT"
+"Repository" = "https://github.com/karpathy/nanoGPT"
+
+# PyTorch CUDA 12.8 索引配置 (RTX 5060 使用)
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+# 指定 PyTorch 相关包从 CUDA 12.8 索引安装
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu128" },
+]
+
+# setuptools 配置：禁用自动包发现，因为这是脚本式项目
+[tool.setuptools]
+packages = []
