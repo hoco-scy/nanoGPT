@@ -9,4 +9,8 @@ __pycache__/
 *.pyc
 input.txt
 env/
-venv/
+.venv/
+
+out-shakespeare-char-5000/
+out-shakespeare-char-500/
+out-shakespeare-char-100/
