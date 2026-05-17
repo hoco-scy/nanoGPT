@@ -74,3 +74,14 @@ All datasets follow the pattern: download → tokenize → write `train.bin`/`va
 
 - Use `--compile=False` if `torch.compile` causes issues (common on Windows/older PyTorch)
 - The `pyproject.toml` includes CUDA 12.8 PyTorch wheel source for RTX 50-series GPUs (via uv)
+
+## Python 运行方式
+
+所有 Python 脚本优先以 uv 脚本（inline script metadata）格式运行，即使用 `uv run script.py` 或在脚本头部添加 `# /// script` 依赖声明。避免直接使用 `pip install` 和裸 `python` 命令。
+
+## Learning Mode
+
+用户正在使用 nanoGPT 进行 LLM 基础学习，会随时询问代码相关问题。回答时应：
+1. **结合代码本身**：引用具体的文件和行号，解释实际实现
+2. **拓展知识**：补充当前最先进的思想、方法和研究进展
+3. **自动记录**：将问答内容追加到当日学习记录 `my_doc/day_X.md` 末尾的 `## Q&A` 章节（格式参考 `my_doc/day_1.md`）
